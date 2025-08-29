@@ -69,11 +69,11 @@ namespace test_lab.Controllers
 
     #region vehicle
     [HttpGet("vehicles")]
-    public async Task<IActionResult> vehicleVehicleList()
+    public async Task<IActionResult> vehicleVehicleList([FromQuery] List<int> groupIds)
     {
       try
       {
-        var response = await _vehicleRepository.vehicleVehicleList(15076);
+        var response = await _vehicleRepository.vehicleVehicleList(15076, groupIds);
         return Ok(new ResponseSingleContentModel<List<VehicleVehicleModel>>
         {
           StatusCode = 200,

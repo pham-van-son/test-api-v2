@@ -9,7 +9,7 @@ namespace test_lab.IRepositories
     Task<VehicleGroupModel> vehicleGroupById(int groupId, int CompanyId);
 
     //Vehicle
-    Task<List<VehicleVehicleModel>> vehicleVehicleList(int CompanyId);
+    Task<List<VehicleVehicleModel>> vehicleVehicleList(int CompanyId, List<int> groupIds);
     Task<VehicleVehicleModel> vehicleVehicleById(int VehicleId, int CompanyId);
 
     //VehicleVehicleGroup

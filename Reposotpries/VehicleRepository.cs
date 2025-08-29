@@ -104,13 +104,22 @@ namespace test_lab.Reposotpries
       return _mapper.Map<VehicleVehicleModel>(response);
     }
 
-    public async Task<List<VehicleVehicleModel>> vehicleVehicleList(int CompanyId)
+    public async Task<List<VehicleVehicleModel>> vehicleVehicleList(int CompanyId, List<int> groupIds)
     {
-      var response = await _context.VehicleVehicles
-        .Where(v => v.FkCompanyId == CompanyId && v.IsDeleted == false && v.IsLocked == false)
-        .ToListAsync();
-      return _mapper.Map<List<VehicleVehicleModel>>(response);
-    }
+            IQueryable<VehicleVehicle> query = _context.VehicleVehicles
+                    .Where(x => x.FkCompanyId == CompanyId && x.IsDeleted == false && x.IsLocked == false);
+            if (groupIds != null && groupIds.Any())
+            {
+                var vehicleIds = await _context.VehicleVehicleGroups
+                    .Where(x => x.FkCompanyId == CompanyId && x.IsDeleted == false && groupIds.Contains(x.FkVehicleGroupId))
+                    .Select(x => x.FkVehicleId)
+                    .Distinct()
+                    .ToListAsync();
+                query = query.Where(x => vehicleIds.Contains((int)x.PkVehicleId));
+            }
+            var response = await query.ToListAsync();
+            return _mapper.Map<List<VehicleVehicleModel>>(response);
+        }
     #endregion
 
     #region VehicleVehicleGroup
