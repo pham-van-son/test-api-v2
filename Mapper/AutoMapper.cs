@@ -8,14 +8,20 @@ namespace test_lab.Mapper
   {
     public AutoMapperProfile()
     {
-      CreateMap<VehicleVehicle, VehicleVehicleModel>();
-      CreateMap<VehicleVehicleModel, VehicleVehicle>();
+        CreateMap<VehicleVehicle, VehicleVehicleModel>();
+        CreateMap<VehicleVehicleModel, VehicleVehicle>();
 
-      CreateMap<VehicleGroup, VehicleGroupModel>();
-      CreateMap<VehicleGroupModel, VehicleGroup>();
+        CreateMap<VehicleGroup, VehicleGroupModel>();
+        CreateMap<VehicleGroupModel, VehicleGroup>();
 
-      CreateMap<VehicleVehicleGroup, VehicleVehicleGroupModel>();
-      CreateMap<VehicleVehicleGroupModel, VehicleVehicleGroup>();
+        CreateMap<VehicleVehicleGroup, VehicleVehicleGroupModel>();
+        CreateMap<VehicleVehicleGroupModel, VehicleVehicleGroup>();
+
+        CreateMap<AdminUser, AdminUserModel>();
+        CreateMap<AdminUserModel, AdminUser>();
+
+        CreateMap<AdminUserVehicleGroup, AdminUserVehicleGroupModel>();
+        CreateMap<AdminUserVehicleGroupModel, AdminUserVehicleGroup>();
     }
   }
 }

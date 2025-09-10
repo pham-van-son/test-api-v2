@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using test_lab.IRepositories;
@@ -136,7 +137,7 @@ namespace test_lab.Controllers
         return Ok(new ResponseSingleContentModel<string>
         {
           StatusCode = 500,
-          Message = "Có lỗi trong quá trình xử lý",
+          Message = "Có lỗi trong quá trình xử lý" + ex.Message,
           Data = null
         });
       }
