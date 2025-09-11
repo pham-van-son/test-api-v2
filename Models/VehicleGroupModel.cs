@@ -35,4 +35,10 @@ namespace test_lab.Models
     public bool? Status { get; set; }
     public int VehicleCount { get; set; }
   }
+
+    public class AssignVehicleGroupRequest
+    {
+        public Guid UserId { get; set; }
+        public List<int> VehicleGroupIds { get; set; }
+    }
 }
