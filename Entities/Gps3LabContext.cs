@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace test_lab.Entities;
+namespace TestLab.Entities;
 
 public partial class Gps3LabContext : DbContext
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace test_lab.Entities;
+namespace TestLab.Entities;
 
 public partial class HrmEmployee
 {

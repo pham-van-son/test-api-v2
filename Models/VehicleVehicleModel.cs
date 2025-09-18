@@ -1,8 +1,11 @@
-namespace test_lab.Models
+namespace TestLab.Models
 {
-  public class VehicleVehicleModel
+    /// <summary>
+    /// Model ph??ng ti?n (Vehicle).
+    /// L?u thông tin chi ti?t v? xe trong h? th?ng.
+    /// </summary>
+    public class VehicleVehicleModel
   {
-
     public int FkCompanyId { get; set; }
 
     public long PkVehicleId { get; set; }

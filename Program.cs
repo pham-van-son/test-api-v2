@@ -1,57 +1,92 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using test_lab.Entities;
-using test_lab.IRepositories;
-using test_lab.Mapper;
-using test_lab.Reposotpries;
+using TestLab.Entities;
+using TestLab.IRepositories;
+using TestLab.Mapper;
+using TestLab.Repositories;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
-builder.Services.AddDbContext<Gps3LabContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddAutoMapper(config =>
+/// <summary>
+/// Program.cs - Điểm khởi chạy của ứng dụng
+/// Cấu hình các dịch vụ (services) và middleware cho API.
+/// Tác giả: [SonPV]
+/// Ngày sửa: [18-09-2025]
+/// </summary>
+public class Program
 {
-  config.AddProfile<AutoMapperProfile>();
-});
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient();
+        #region Cấu hình Services
 
-builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+        // Thêm controllers
+        builder.Services.AddControllers();
 
-builder.Services.AddHttpContextAccessor();
+        // Cấu hình Swagger / OpenAPI
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "TestLab API",
+                Version = "v1"
+            });
+        });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+        // Cấu hình Entity Framework với SQL Server
+        builder.Services.AddDbContext<Gps3LabContext>(options =>
+            options.UseSqlServer(
+                builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        // Cấu hình AutoMapper
+        builder.Services.AddAutoMapper(config =>
+        {
+            config.AddProfile<AutoMapperProfile>();
+        });
 
-builder.Services.AddCors(options =>
-{
-  options.AddPolicy("AllowAll", policy =>
-  {
-    policy.WithOrigins()
-          .AllowAnyOrigin()
-          .AllowAnyMethod()
-          .SetIsOriginAllowed(origin => true)
-          .AllowAnyHeader();
-  });
-});
+        // Đăng ký Repository
+        builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
-var app = builder.Build();
+        // Đăng ký các dịch vụ HTTP
+        builder.Services.AddHttpClient();
+        builder.Services.AddHttpContextAccessor();
 
-app.UseCors("AllowAll");
+        // Cấu hình CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
 
-app.UseHttpsRedirection();
+        #endregion
 
-app.UseAuthorization();
+        var app = builder.Build();
 
-app.MapControllers();
+        #region Cấu hình Middleware
 
-app.UseSwagger();
-app.UseSwaggerUI();
+        // Cho phép CORS
+        app.UseCors("AllowAll");
 
-app.Run();
+        // Bắt buộc HTTPS
+        app.UseHttpsRedirection();
+
+        // Ủy quyền (Authorization)
+        app.UseAuthorization();
+
+        // Map API controllers
+        app.MapControllers();
+
+        // Bật Swagger UI
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
+        #endregion
+
+        app.Run();
+    }
+}

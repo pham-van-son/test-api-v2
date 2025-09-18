@@ -1,21 +1,30 @@
-using AutoMapper;
-using test_lab.Entities;
-using test_lab.Models;
+﻿using AutoMapper;
+using TestLab.Entities;
+using TestLab.Models;
 
-namespace test_lab.Mapper
+namespace TestLab.Mapper
 {
-  public class AutoMapperProfile: Profile
-  {
-    public AutoMapperProfile()
+    /// <summary>
+    /// Cấu hình AutoMapper cho các Entity và Model.
+    /// </summary>
+    public class AutoMapperProfile : Profile
     {
-      CreateMap<VehicleVehicle, VehicleVehicleModel>();
-      CreateMap<VehicleVehicleModel, VehicleVehicle>();
+        /// <summary>
+        /// Khởi tạo các mapping giữa Entity và Model.
+        /// </summary>
+        public AutoMapperProfile()
+        {
+            // Mapping cho Vehicle
+            CreateMap<VehicleVehicle, VehicleVehicleModel>();
+            CreateMap<VehicleVehicleModel, VehicleVehicle>();
 
-      CreateMap<VehicleGroup, VehicleGroupModel>();
-      CreateMap<VehicleGroupModel, VehicleGroup>();
+            // Mapping cho VehicleGroup
+            CreateMap<VehicleGroup, VehicleGroupModel>();
+            CreateMap<VehicleGroupModel, VehicleGroup>();
 
-      CreateMap<VehicleVehicleGroup, VehicleVehicleGroupModel>();
-      CreateMap<VehicleVehicleGroupModel, VehicleVehicleGroup>();
+            // Mapping cho VehicleVehicleGroup
+            CreateMap<VehicleVehicleGroup, VehicleVehicleGroupModel>();
+            CreateMap<VehicleVehicleGroupModel, VehicleVehicleGroup>();
+        }
     }
-  }
 }
