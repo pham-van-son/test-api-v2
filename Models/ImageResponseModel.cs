@@ -1,59 +1,138 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace test_lab.Models
+namespace TestLab.Models
 {
-  public class ImageResponseModel
-  {
-    [JsonPropertyName("v")]
-    public string VehiclePlate { get; set; } = string.Empty;
+    /// <summary>
+    /// Model phản hồi hình ảnh từ hệ thống.
+    /// </summary>
+    public class ImageResponseModel
+    {
+        /// <summary>
+        /// Biển số xe.
+        /// </summary>
+        [JsonPropertyName("v")]
+        public string VehiclePlate { get; set; } = string.Empty;
 
-    [JsonPropertyName("c")]
-    public DateTime CaptureTime { get; set; }
+        /// <summary>
+        /// Thời điểm chụp.
+        /// </summary>
+        [JsonPropertyName("c")]
+        public DateTime CaptureTime { get; set; }
 
-    [JsonPropertyName("u")]
-    public string Url { get; set; } = string.Empty;
+        /// <summary>
+        /// Đường dẫn URL của hình ảnh.
+        /// </summary>
+        [JsonPropertyName("u")]
+        public string Url { get; set; } = string.Empty;
 
-    [JsonPropertyName("s")]
-    public int Speed { get; set; }
+        /// <summary>
+        /// Vận tốc (km/h).
+        /// </summary>
+        [JsonPropertyName("s")]
+        public int Speed { get; set; }
 
-    [JsonPropertyName("k")]
-    public int Channel { get; set; }
+        /// <summary>
+        /// Kênh chụp.
+        /// </summary>
+        [JsonPropertyName("k")]
+        public int Channel { get; set; }
 
-    [JsonPropertyName("w")]
-    public int Width { get; set; }
+        /// <summary>
+        /// Chiều rộng của ảnh.
+        /// </summary>
+        [JsonPropertyName("w")]
+        public int Width { get; set; }
 
-    [JsonPropertyName("h")]
-    public int Height { get; set; }
+        /// <summary>
+        /// Chiều cao của ảnh.
+        /// </summary>
+        [JsonPropertyName("h")]
+        public int Height { get; set; }
 
-    [JsonPropertyName("i")]
-    public long Id { get; set; }
+        /// <summary>
+        /// ID hình ảnh.
+        /// </summary>
+        [JsonPropertyName("i")]
+        public long Id { get; set; }
 
-    [JsonPropertyName("t")]
-    public int Type { get; set; }
+        /// <summary>
+        /// Loại hình ảnh.
+        /// </summary>
+        [JsonPropertyName("t")]
+        public int Type { get; set; }
 
-    [JsonPropertyName("l")]
-    public string License { get; set; } = string.Empty;
+        /// <summary>
+        /// Giấy phép liên quan (nếu có).
+        /// </summary>
+        [JsonPropertyName("l")]
+        public string License { get; set; } = string.Empty;
 
-    [JsonPropertyName("n")]
-    public string DriverName { get; set; } = string.Empty;
-  }
+        /// <summary>
+        /// Tên tài xế.
+        /// </summary>
+        [JsonPropertyName("n")]
+        public string DriverName { get; set; } = string.Empty;
+    }
 
-  public class ImageRequestModel
-  {
-    public int CustomerId { get; set; }
-    public string VehicleName { get; set; } = string.Empty;
-    public int[] Channels { get; set; } = Array.Empty<int>();
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
-    public int Frequency { get; set; }
-    public int StorageTime { get; set; }
-    public string SortOrder { get; set; } = "desc";
-  }
+    /// <summary>
+    /// Model yêu cầu lấy hình ảnh.
+    /// </summary>
+    public class ImageRequestModel
+    {
+        /// <summary>
+        /// ID khách hàng.
+        /// </summary>
+        public int CustomerId { get; set; }
 
-  public class ImageApiResponse
-  {
-    public bool IsSuccess { get; set; }
+        /// <summary>
+        /// Tên phương tiện.
+        /// </summary>
+        public string VehicleName { get; set; } = string.Empty;
 
-    public List<ImageResponseModel> Data { get; set; } = new();
-  }
+        /// <summary>
+        /// Danh sách kênh chụp.
+        /// </summary>
+        public int[] Channels { get; set; } = Array.Empty<int>();
+
+        /// <summary>
+        /// Thời gian bắt đầu.
+        /// </summary>
+        public DateTime StartTime { get; set; }
+
+        /// <summary>
+        /// Thời gian kết thúc.
+        /// </summary>
+        public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// Tần suất chụp.
+        /// </summary>
+        public int Frequency { get; set; }
+
+        /// <summary>
+        /// Thời gian lưu trữ (phút/giờ/ngày tùy hệ thống).
+        /// </summary>
+        public int StorageTime { get; set; }
+
+        /// <summary>
+        /// Thứ tự sắp xếp ("asc" hoặc "desc", mặc định: desc).
+        /// </summary>
+        public string SortOrder { get; set; } = "desc";
+    }
+
+    /// <summary>
+    /// Model phản hồi API hình ảnh.
+    /// </summary>
+    public class ImageApiResponse
+    {
+        /// <summary>
+        /// Có thành công hay không.
+        /// </summary>
+        public bool IsSuccess { get; set; }
+
+        /// <summary>
+        /// Danh sách dữ liệu hình ảnh.
+        /// </summary>
+        public List<ImageResponseModel> Data { get; set; } = new();
+    }
 }

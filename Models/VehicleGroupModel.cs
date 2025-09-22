@@ -1,7 +1,11 @@
-namespace test_lab.Models
+﻿namespace TestLab.Models
 {
-  public class VehicleGroupModel
-  {
+    /// <summary>
+    /// Model nhóm phương tiện (Vehicle Group).
+    /// Lưu trữ thông tin về nhóm xe và các thiết lập liên quan.
+    /// </summary>
+    public class VehicleGroupModel
+    {
     public int FkCompanyId { get; set; }
 
     public int PkVehicleGroupId { get; set; }
