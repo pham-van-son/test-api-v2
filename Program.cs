@@ -1,15 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TestLab.Entities;
 using TestLab.IRepositories;
 using TestLab.Mapper;
 using TestLab.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 /// <summary>
 /// Program.cs - Điểm khởi chạy của ứng dụng
 /// Cấu hình các dịch vụ (services) và middleware cho API.
 /// Tác giả: [SonPV]
-/// Ngày sửa: [18-09-2025]
+/// Ngày sửa: [22-09-2025]
 /// </summary>
 public class Program
 {
@@ -46,10 +49,28 @@ public class Program
 
         // Đăng ký Repository
         builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+        builder.Services.AddScoped<IVehicleGroupRepository, VehicleGroupRepository>();
 
         // Đăng ký các dịch vụ HTTP
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
+
+        // Cấu hình Authentication (JWT)
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+            });
+
+        builder.Services.AddAuthorization();
 
         // Cấu hình CORS
         builder.Services.AddCors(options =>
@@ -75,7 +96,8 @@ public class Program
         // Bắt buộc HTTPS
         app.UseHttpsRedirection();
 
-        // Ủy quyền (Authorization)
+        // Authentication & Authorization
+        app.UseAuthentication();
         app.UseAuthorization();
 
         // Map API controllers

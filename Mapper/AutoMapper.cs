@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using TestLab.Entities;
 using TestLab.Models;
 
@@ -25,6 +25,14 @@ namespace TestLab.Mapper
             // Mapping cho VehicleVehicleGroup
             CreateMap<VehicleVehicleGroup, VehicleVehicleGroupModel>();
             CreateMap<VehicleVehicleGroupModel, VehicleVehicleGroup>();
+
+            // Mapping cho AdminUser
+            CreateMap<AdminUser, AdminUserModel>();
+            CreateMap<AdminUserModel, AdminUser>();
+
+            // Mapping cho AdminUserVehicleGroup
+            CreateMap<AdminUserVehicleGroup, AdminUserVehicleGroupModel>();
+            CreateMap<AdminUserVehicleGroupModel, AdminUserVehicleGroup>();
         }
     }
 }
