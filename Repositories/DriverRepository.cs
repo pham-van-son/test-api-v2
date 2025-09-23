@@ -23,10 +23,10 @@ namespace test_lab.Repositories
 
         public async Task<IEnumerable<HrmEmployee>> GetAllEmployees(int companyId)
         {
-            using var conn = GetConnection();
-            await conn.OpenAsync();
+                using var conn = GetConnection();
+                await conn.OpenAsync();
 
-            var sql = @"
+                var sql = @"
                 SELECT PK_EmployeeID AS PkEmployeeId,
                        DisplayName,
                        Mobile,
@@ -38,7 +38,7 @@ namespace test_lab.Repositories
                 ORDER BY DisplayName ASC;
             ";
 
-            return await conn.QueryAsync<HrmEmployee>(sql, new { CompanyId = companyId });
+                return await conn.QueryAsync<HrmEmployee>(sql, new { CompanyId = companyId });
         }
 
         public async Task<IEnumerable<BcaLicenseTypeModel>> GetLicenseTypes(string? searchTerm)
@@ -47,7 +47,7 @@ namespace test_lab.Repositories
             await conn.OpenAsync();
 
             var sql = @"
-                SELECT PkLicenseTypeId,
+                SELECT Pk_LicenseTypeID,
                        Name,
                        Code,
                        IsActived,
