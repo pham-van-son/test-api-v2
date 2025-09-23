@@ -22,6 +22,12 @@ namespace test_lab.Mapper
 
         CreateMap<AdminUserVehicleGroup, AdminUserVehicleGroupModel>();
         CreateMap<AdminUserVehicleGroupModel, AdminUserVehicleGroup>();
+
+        CreateMap<BcaLicenseType, BcaLicenseTypeModel>();
+        CreateMap<BcaLicenseTypeModel, BcaLicenseType>();
+
+        CreateMap<HrmEmployee, HrmEmployeeModel>();
+        CreateMap<HrmEmployeeModel, HrmEmployee>();
     }
   }
 }

@@ -4,7 +4,7 @@ using test_lab.Entities;
 using test_lab.IRepositories;
 using test_lab.Models;
 
-namespace test_lab.Reposotpries
+namespace test_lab.Repositories
 {
     public class VehicleGroupRepository : IVehicleGroupRepository
     {

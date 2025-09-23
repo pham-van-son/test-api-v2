@@ -1,13 +1,10 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using System.Data;
 using test_lab.Entities;
 using test_lab.IRepositories;
 using test_lab.Mapper;
-using test_lab.Reposotpries;
-using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using test_lab.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-builder.Services.AddDbContext<Gps3LabContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// C?u hình k?t n?i SQL Server v?i Dapper
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    return new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+// C?u hình k?t n?i SQL Server v?i Entity Framework Core
+builder.Services.AddDbContext<Gps3LabContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(config =>
 {
@@ -27,6 +32,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleGroupRepository, VehicleGroupRepository>();
+builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 
 builder.Services.AddHttpContextAccessor();
 
