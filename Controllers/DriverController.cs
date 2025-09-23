@@ -8,7 +8,7 @@ using test_lab.Models;
 
 namespace test_lab.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/driver")]
     [ApiController]
     public class DriverController : ControllerBase
     {
@@ -250,14 +250,13 @@ namespace test_lab.Controllers
             if (parts.Length < 2) throw new ArgumentException("Range must be in format 'start:end'");
 
             int startRow = int.Parse(parts[0]);
-            int endRow = int.Parse(parts[parts.Length - 1]); // Lấy giá trị cuối cùng làm end row
+            int endRow = int.Parse(parts[parts.Length - 1]);
             string startCol = "A";
-            string endCol = GetColumnLetter(columnCount - 1); // Chuyển số cột thành letter (I cho 9 cột)
+            string endCol = GetColumnLetter(columnCount - 1);
 
             return $"{startCol}{startRow}:{endCol}{endRow}";
         }
 
-        // Hàm chuyển số cột thành letter (0 = A, 8 = I, v.v.)
         private string GetColumnLetter(int columnIndex)
         {
             return columnIndex < 26
@@ -271,6 +270,6 @@ public class ExportConfig
 {
     public string Title { get; set; }
     public string LicenseCategories { get; set; }
-    public string MergeTitleRows { get; set; } // Ví dụ: "1:2"
-    public string MergeCategoriesRows { get; set; } // Ví dụ: "3:5" hoặc "3:4:5"
+    public string MergeTitleRows { get; set; }
+    public string MergeCategoriesRows { get; set; }
 }
