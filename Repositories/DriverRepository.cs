@@ -148,5 +148,23 @@ namespace test_lab.Repositories
                 EmployeeIds = employeeIds
             });
         }
+
+        public async Task<int> DeleteEmployee(int companyId, int employeeId)
+        {
+            var sql = @"
+                UPDATE [HRM.Employees]
+                SET IsDeleted = 1,
+                    UpdatedDate = GETDATE()
+                WHERE FK_CompanyID = @CompanyId
+                  AND PK_EmployeeID = @EmployeeId;
+            ";
+
+            using var conn = new SqlConnection(_connectionString);
+            return await conn.ExecuteAsync(sql, new
+            {
+                CompanyId = companyId,
+                EmployeeId = employeeId
+            });
+        }
     }
 }

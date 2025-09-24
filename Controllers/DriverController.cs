@@ -128,6 +128,34 @@ namespace test_lab.Controllers
         }
 
         /// <summary>
+        /// Xóa bản ghi
+        /// </summary>
+        [HttpDelete("remove/{employeeId}")]
+        public async Task<IActionResult> DeleteEmployee(int employeeId)
+        {
+            try
+            {
+                var response = await _driverRepository.DeleteEmployee(15076, employeeId);
+
+                return Ok(new ResponseSingleContentModel<int>
+                {
+                    StatusCode = 200,
+                    Message = "Xóa  lái xe thành công",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 500,
+                    Message = "Có lỗi xảy ra trong quá trình xử lý!!!" + ex.Message,
+                    Data = null,
+                });
+            }
+        }
+
+        /// <summary>
         /// Xuất file Excel danh sách lái xe
         /// </summary>
         [HttpPost("export-drivers-custom")]

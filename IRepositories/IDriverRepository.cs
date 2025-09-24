@@ -9,5 +9,6 @@ namespace test_lab.IRepositories
         Task<PaginationSet<HrmEmployee>> GetPagedList(int companyId, int page, int pageSize, string? searchTerm, string? driverLicense);
         Task<IEnumerable<BcaLicenseTypeModel>> GetLicenseTypes(string? searchTerm);
         Task<IEnumerable<HrmEmployee>> GetAllEmployees(int companyId);
+        Task<int> DeleteEmployee(int companyId, int employeeId);
     }
 }
