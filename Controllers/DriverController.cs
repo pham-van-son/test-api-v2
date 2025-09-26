@@ -22,16 +22,21 @@ namespace test_lab.Controllers
         }
 
         /// <summary>
-        /// Cập nhật thông tin lái xe
+        /// Cập nhật thông tin lái xe cho nhiều bản ghi cùng lúc.
         /// </summary>
+        /// <param name="request">Thông tin các employeeId và dữ liệu cập nhật</param>
+        /// <returns>
+        /// 200: Số bản ghi cập nhật thành công.<br/>
+        /// 404: Không tìm thấy lái xe để cập nhật.<br/>
+        /// 500: Có lỗi xảy ra trong quá trình xử lý.
+        /// </returns>
         [HttpPut("update-drivers")]
         public async Task<IActionResult> UpdateDrivers([FromBody] UpdateDriversRequest request)
         {
             try
             {
-                var entity = _mapper.Map<HrmEmployee>(request.UpdateData);
-
-                var response = await _driverRepository.UpdateEmployees(15076, request.EmployeeIds, entity);
+                // Không cần map nữa, gửi thẳng UpdateData xuống repository
+                var response = await _driverRepository.UpdateEmployees(15076, request.EmployeeIds, request.UpdateData);
 
                 if (response > 0)
                 {
@@ -64,44 +69,59 @@ namespace test_lab.Controllers
         }
 
         /// <summary>
-        /// Lấy danh sách lái xe có phân trang + filter theo DisplayName, DriverLicense
+        /// Lấy danh sách lái xe có phân trang, filter theo tên, số GPLX, loại bằng, employeeId.
         /// </summary>
+        /// <param name="page">Trang hiện tại (mặc định 1)</param>
+        /// <param name="pageSize">Số bản ghi/trang (mặc định 20)</param>
+        /// <param name="searchTerm">Từ khóa tìm kiếm theo tên</param>
+        /// <param name="driverLicense">Số GPLX</param>
+        /// <param name="licenseTypes">Danh sách loại bằng lái</param>
+        /// <param name="employeeIds">Danh sách employeeId</param>
+        /// <returns>Danh sách lái xe phân trang</returns>
         [HttpGet("list-drivers")]
-        public async Task<IActionResult> GetDrivers([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? searchTerm = null, [FromQuery] string? driverLicense = null)
+        public async Task<IActionResult> GetDrivers(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] string? driverLicense = null,
+            [FromQuery] List<int>? licenseTypes = null,
+            [FromQuery] List<int>? employeeIds = null
+        )
         {
-            try
-            {
-                var result = await _driverRepository.GetPagedList(15076, page, pageSize, searchTerm, driverLicense);
+            var filteredEmployeeIds = (employeeIds != null && employeeIds.Any()) ? employeeIds : null;
+            var filteredLicenseTypes = (licenseTypes != null && licenseTypes.Any()) ? licenseTypes : null;
 
-                var models = _mapper.Map<List<HrmEmployeeModel>>(result.Items);
+            var result = await _driverRepository.GetPagedList(
+                15076,
+                page,
+                pageSize,
+                searchTerm,
+                driverLicense,
+                filteredLicenseTypes,
+                filteredEmployeeIds
+            );
 
-                return Ok(new ResponseSingleContentModel<PaginationSet<HrmEmployeeModel>>
-                {
-                    StatusCode = 200,
-                    Message = "Lấy danh sách lái xe thành công",
-                    Data = new PaginationSet<HrmEmployeeModel>
-                    {
-                        Page = result.Page,
-                        PageSize = result.PageSize,
-                        TotalCount = result.TotalCount,
-                        Items = models
-                    }
-                });
-            }
-            catch (Exception ex)
+            var models = _mapper.Map<List<HrmEmployeeModel>>(result.Items);
+
+            return Ok(new ResponseSingleContentModel<PaginationSet<HrmEmployeeModel>>
             {
-                return Ok(new ResponseSingleContentModel<string>
+                StatusCode = 200,
+                Message = "Lấy danh sách lái xe thành công",
+                Data = new PaginationSet<HrmEmployeeModel>
                 {
-                    StatusCode = 500,
-                    Message = "Có lỗi xảy ra trong quá trình xử lý!!!" + ex.Message,
-                    Data = null,
-                });
-            }
+                    Page = result.Page,
+                    PageSize = result.PageSize,
+                    TotalCount = result.TotalCount,
+                    Items = models
+                }
+            });
         }
 
         /// <summary>
-        /// Lấy danh sách loại bằng lái xe (đang hoạt động, chưa xóa)
+        /// Lấy danh sách loại bằng lái xe (đang hoạt động, chưa xóa).
         /// </summary>
+        /// <param name="searchTerm">Từ khóa tìm kiếm theo tên loại bằng</param>
+        /// <returns>Danh sách loại bằng lái</returns>
         [HttpGet("list-license")]
         public async Task<IActionResult> GetLicenseTypes([FromQuery] string? searchTerm = null)
         {
@@ -128,8 +148,13 @@ namespace test_lab.Controllers
         }
 
         /// <summary>
-        /// Xóa bản ghi
+        /// Xóa mềm (soft delete) một lái xe theo mã nhân viên.
         /// </summary>
+        /// <param name="employeeId">ID của lái xe cần xóa</param>
+        /// <returns>
+        /// 200: Xóa thành công, trả về số bản ghi bị ảnh hưởng.<br/>
+        /// 500: Có lỗi xảy ra trong quá trình xử lý.
+        /// </returns>
         [HttpDelete("remove/{employeeId}")]
         public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
@@ -140,7 +165,7 @@ namespace test_lab.Controllers
                 return Ok(new ResponseSingleContentModel<int>
                 {
                     StatusCode = 200,
-                    Message = "Xóa  lái xe thành công",
+                    Message = "Xóa lái xe thành công",
                     Data = response
                 });
             }
@@ -156,8 +181,10 @@ namespace test_lab.Controllers
         }
 
         /// <summary>
-        /// Xuất file Excel danh sách lái xe
+        /// Xuất file Excel danh sách lái xe.
         /// </summary>
+        /// <param name="config">Cấu hình xuất file (tiêu đề, merge, danh sách hạng bằng lái...)</param>
+        /// <returns>File Excel danh sách lái xe</returns>
         [HttpPost("export-drivers-custom")]
         public async Task<IActionResult> ExportDriversCustom([FromBody] ExportConfig config = null)
         {
@@ -271,7 +298,9 @@ namespace test_lab.Controllers
             }
         }
 
-        // Hàm helper để parse range từ "start:end" thành "Astart:Iend"
+        /// <summary>
+        /// Hàm helper để parse range từ "start:end" thành "Astart:Iend".
+        /// </summary>
         private string ParseRange(string rangeStr, int columnCount)
         {
             var parts = rangeStr.Split(':');
@@ -285,13 +314,16 @@ namespace test_lab.Controllers
             return $"{startCol}{startRow}:{endCol}{endRow}";
         }
 
+        /// <summary>
+        /// Hàm helper lấy ký tự cột Excel từ index.
+        /// </summary>
         private string GetColumnLetter(int columnIndex)
         {
             return columnIndex < 26
                 ? ((char)('A' + columnIndex)).ToString()
                 : throw new ArgumentException("Column index too high for single letter");
         }
-    }
+    }   
 }
 
 public class ExportConfig
